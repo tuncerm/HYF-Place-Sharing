@@ -12,7 +12,6 @@ import {
 } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
 import { useHttpClient } from '../../shared/hooks/http-hook';
-
 import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
 
@@ -89,8 +88,7 @@ const Auth = () => {
             name: formState.inputs.name.value,
             email: formState.inputs.email.value,
             password: formState.inputs.password.value
-          }),
-          {'Content-Type': 'application/json'}
+          }),{'Content-Type': 'application/json'}
         );
         const responseData = await response.json();
         if(!response.ok){
