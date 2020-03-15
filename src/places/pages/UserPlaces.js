@@ -13,9 +13,10 @@ const UserPlaces = () => {
 
   useEffect(()=>{
     const fetchPlaces = async () => {
-      const response = await sendRequest(`${process.env.REACT_APP_API_URL}/places/user/${userId}`);
-      const responseData = response.json();
-      setPlaces(responseData.places);
+      try{
+        const response = await sendRequest(`${process.env.REACT_APP_API_URL}/places/user/${userId}`);
+        setPlaces(response.places);
+      } catch {}
     };
     fetchPlaces();
   }, [sendRequest, userId]);

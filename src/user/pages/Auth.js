@@ -3,6 +3,7 @@ import React, { useState, useContext } from 'react';
 import Card from '../../shared/components/UIElements/Card';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
+import ImageUpload from '../../shared/components/FormElements/ImageUpload';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import {
@@ -39,7 +40,8 @@ const Auth = () => {
       setFormData(
         {
           ...formState.inputs,
-          name: undefined
+          name: undefined,
+          image: undefined
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -49,6 +51,10 @@ const Auth = () => {
           ...formState.inputs,
           name: {
             value: '',
+            isValid: false
+          },
+          image: {
+            value: null,
             isValid: false
           }
         },
@@ -71,33 +77,22 @@ const Auth = () => {
           }),
           {'Content-Type': 'application/json'}
         );
-        const responseData = await response.json();
-        if(!response.ok){
-          throw new Error(responseData.message);
-        }
-        auth.login(responseData.user.id);
-      } catch {
-
-      }
+        auth.login(response.user.id);
+      } catch {}
     } else {
       try{
+        const formData = new FormData();
+        formData.append('name', formState.inputs.name.value);
+        formData.append('email', formState.inputs.email.value);
+        formData.append('password', formState.inputs.password.value);
+        formData.append('image', formState.inputs.image.value);
         const response = await sendRequest(
           `${process.env.REACT_APP_API_URL}/users/signup`, 
           'POST', 
-          JSON.stringify({
-            name: formState.inputs.name.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value
-          }),{'Content-Type': 'application/json'}
+          formData
         );
-        const responseData = await response.json();
-        if(!response.ok){
-          throw new Error(responseData.message);
-        }
-        auth.login(responseData.user.id);
-      } catch {
-        
-      }
+        auth.login(response.user.id);
+      } catch {}
     }
 
   };
@@ -121,6 +116,7 @@ const Auth = () => {
               onInput={inputHandler}
             />
           )}
+          {!isLoginMode && <ImageUpload center id="image" onInput={inputHandler}/>}
           <Input
             element="input"
             id="email"

@@ -40,16 +40,15 @@ const NewPlace = () => {
   const placeSubmitHandler = async event => {
     event.preventDefault();
     try{
-      //const response = 
-      await sendRequest(`${process.env.REACT_APP_API_URL}/places`, 'POST', {
+      await sendRequest(`${process.env.REACT_APP_API_URL}/places`, 'POST', JSON.stringify({
         title: formState.inputs.title.value,
         description: formState.inputs.description.value,
-        adress: formState.inputs.adress.value,
+        address: formState.inputs.address.value,
         creator: auth.userId
-      },
+      }),
       {'Content-Type': 'application/json'});
       history.push('/');
-    }catch{}
+    } catch {}
   };
 
   return (
